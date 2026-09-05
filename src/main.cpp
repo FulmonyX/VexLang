@@ -13,25 +13,38 @@ int main(int argc, char *argv[])
 
     std::string inputFile = argv[1];
 
-    if (!Utils::fileExists(inputFile))
+    if (!vexlang::utils::fileExists(inputFile))
     {
         std::cerr << "Error: File not found: " << inputFile << std::endl;
         return 1;
     }
 
-    std::string exeDir = Utils::getDir(argv[0]);
+    std::string exeDir = vexlang::utils::getDir(argv[0]);
 
-    Preprocessor preprocessor;
-    preprocessor.addSystemPath(Utils::joinPath(exeDir, "lib"));
-    std::string code = preprocessor.preprocess(inputFile);
-
-    Lexer lexer(code);
-    std::vector<Token> tokens = lexer.tokenizeAll();
-
-    std::cout << "=== Tokens ===" << std::endl;
-    for (const auto &token : tokens)
+    try
     {
-        std::cout << token.toString() << std::endl;
+        vexlang::Preprocessor preprocessor;
+        preprocessor.addSystemPath(vexlang::utils::joinPath(exeDir, "lib"));
+        std::string code = preprocessor.preprocess(inputFile);
+
+        vexlang::Lexer lexer(code);
+        std::vector<vexlang::Token> tokens = lexer.tokenizeAll();
+
+        std::cout << "=== Tokens ===" << std::endl;
+        for (const auto &token : tokens)
+        {
+            std::cout << token.toString() << std::endl;
+        }
+    }
+    catch (const vexlang::PreprocessorError &e)
+    {
+        std::cerr << "Preprocessor error: " << e.what() << std::endl;
+        return 1;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
 
     return 0;

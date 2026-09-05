@@ -5,140 +5,142 @@
 #include <vector>
 #include <unordered_map>
 
-enum class TokenType
+namespace vexlang
 {
-    NUMBER,
-    FLOAT,
-    STRING,
-    IDENTIFIER,
 
-    INT8,
-    INT16,
-    INT32,
-    INT64,
-    UINT8,
-    UINT16,
-    UINT32,
-    UINT64,
-    FLOAT32,
-    FLOAT64,
-    BOOL,
-    VOID,
-    AUTO,
-    FILE,
-    FN,
-    RETURN,
-    CONST,
-    IF,
-    ELSE,
-    WHILE,
-    DO,
-    FOR,
-    SWITCH,
-    CASE,
-    DEFAULT,
-    BREAK,
-    CONTINUE,
-    CLASS,
-    PUBLIC,
-    PRIVATE,
-    PROTECTED,
-    VIRTUAL,
-    TEMPLATE,
-    TYPENAME,
-    TRY,
-    CATCH,
-    THROW,
-    LET,
-    TRUE,
-    FALSE,
-    NULLPTR,
+    enum class TokenType
+    {
+        NUMBER,
+        FLOAT,
+        STRING,
+        IDENTIFIER,
+        INT8,
+        INT16,
+        INT32,
+        INT64,
+        UINT8,
+        UINT16,
+        UINT32,
+        UINT64,
+        FLOAT32,
+        FLOAT64,
+        BOOL,
+        VOID,
+        AUTO,
+        FILE,
+        FN,
+        RETURN,
+        CONST,
+        IF,
+        ELSE,
+        WHILE,
+        DO,
+        FOR,
+        SWITCH,
+        CASE,
+        DEFAULT,
+        BREAK,
+        CONTINUE,
+        CLASS,
+        PUBLIC,
+        PRIVATE,
+        PROTECTED,
+        VIRTUAL,
+        TEMPLATE,
+        TYPENAME,
+        TRY,
+        CATCH,
+        THROW,
+        LET,
+        TRUE,
+        FALSE,
+        NULLPTR,
+        PLUS,
+        MINUS,
+        STAR,
+        SLASH,
+        PERCENT,
+        PLUSPLUS,
+        MINUSMINUS,
+        EQ,
+        EQEQ,
+        NEQ,
+        LT,
+        GT,
+        LTE,
+        GTE,
+        AND,
+        OR,
+        NOT,
+        PLUSEQ,
+        MINUSEQ,
+        STAREQ,
+        SLASHEQ,
+        PERCENTEQ,
+        LPAREN,
+        RPAREN,
+        LBRACE,
+        RBRACE,
+        LBRACKET,
+        RBRACKET,
+        COMMA,
+        SEMICOLON,
+        COLON,
+        DOT,
+        ARROW,
+        EOF_TOKEN,
+        UNKNOWN
+    };
 
-    PLUS,
-    MINUS,
-    STAR,
-    SLASH,
-    PERCENT,
-    PLUSPLUS,
-    MINUSMINUS,
-    EQ,
-    EQEQ,
-    NEQ,
-    LT,
-    GT,
-    LTE,
-    GTE,
-    AND,
-    OR,
-    NOT,
-    PLUSEQ,
-    MINUSEQ,
-    STAREQ,
-    SLASHEQ,
-    PERCENTEQ,
+    struct Token
+    {
+        TokenType type;
+        std::string lexeme;
+        int line;
+        int column;
 
-    LPAREN,
-    RPAREN,
-    LBRACE,
-    RBRACE,
-    LBRACKET,
-    RBRACKET,
-    COMMA,
-    SEMICOLON,
-    COLON,
-    DOT,
-    ARROW,
+        Token(TokenType t = TokenType::UNKNOWN,
+              std::string l = "",
+              int line = 1,
+              int col = 1);
 
-    EOF_TOKEN,
-    UNKNOWN
-};
+        std::string toString() const;
+        bool isKeyword() const;
+        bool isType() const;
+    };
 
-struct Token
-{
-    TokenType type;
-    std::string lexeme;
-    int line;
-    int column;
+    class Lexer
+    {
+    public:
+        explicit Lexer(const std::string &src);
+        Token nextToken();
+        std::vector<Token> tokenizeAll();
+        void reset(const std::string &src);
 
-    Token(TokenType t = TokenType::UNKNOWN,
-          std::string l = "",
-          int line = 1,
-          int col = 1);
+    private:
+        std::string source;
+        size_t position;
+        int line;
+        int column;
+        char currentChar;
+        std::unordered_map<std::string, TokenType> keywords;
 
-    std::string toString() const;
-    bool isKeyword() const;
-    bool isType() const;
-};
+        void initKeywords();
+        void advance();
+        char peek() const;
+        void skipWhitespace();
+        void skipLineComment();
+        void skipBlockComment();
+        void skipComment();
+        Token readNumber();
+        Token readIdentifier();
+        Token readString();
+        Token readUnknown();
+        bool isHexDigit(char c) const;
+        bool isOctDigit(char c) const;
+        bool isBinDigit(char c) const;
+    };
 
-class Lexer
-{
-private:
-    std::string source;
-    size_t position;
-    int line;
-    int column;
-    char currentChar;
-
-    std::unordered_map<std::string, TokenType> keywords;
-    void initKeywords();
-
-    void advance();
-    char peek() const;
-    void skipWhitespace();
-    void skipComment();
-    void skipLineComment();
-    void skipBlockComment();
-
-    Token readNumber();
-    Token readIdentifier();
-    Token readString();
-    Token readUnknown();
-
-public:
-    Lexer(const std::string &src);
-    Token nextToken();
-    std::vector<Token> tokenizeAll();
-    void reset(const std::string &src);
-};
+} // namespace vexlang
 
 #endif

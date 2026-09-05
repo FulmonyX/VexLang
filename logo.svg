@@ -1,11 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 漩涡继续向左上移动（X-3，Y-2） -->
   <path d="
-    M 40 32 
-    A 15 15 0 0 1 25 47 
-    A 22 22 0 0 1 47 25 
-    A 29 29 0 0 1 18 54 
-    A 36 36 0 0 1 54 18
+    M 45 25
+    A 24 24 0 0 1 21 49
+    A 33 33 0 0 1 54 16
+    A 42 42 0 0 1 12 55
+    A 51 51 0 0 1 60 10
   " stroke="#2a8fc4" stroke-width="3" fill="none" stroke-linecap="round" />
-  <circle cx="34" cy="38" r="4" fill="#22dd88" opacity="0.85" />
-  <circle cx="34" cy="38" r="2" fill="#ffcc00" opacity="0.9" />
+  <circle cx="33" cy="33" r="6" fill="#22dd88" opacity="0.85" />
+  <circle cx="33" cy="33" r="3" fill="#ffcc00" opacity="0.9" />
 </svg>
