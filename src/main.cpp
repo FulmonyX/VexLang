@@ -1,8 +1,9 @@
 #include "../inc/preprocessor.h"
 #include "../inc/lexer.h"
+#include "../inc/parser.h"
 #include "../inc/utils.h"
 #include <iostream>
-
+//g++ -std=c++17 src/main.cpp src/preprocessor.cpp src/lexer.cpp src/parser.cpp src/utils.cpp -o vl
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -23,18 +24,21 @@ int main(int argc, char *argv[])
 
     try
     {
+        // 1. 预处理
         vexlang::Preprocessor preprocessor;
         preprocessor.addSystemPath(vexlang::utils::joinPath(exeDir, "lib"));
         std::string code = preprocessor.preprocess(inputFile);
 
+        // 2. 词法分析
         vexlang::Lexer lexer(code);
         std::vector<vexlang::Token> tokens = lexer.tokenizeAll();
 
-        std::cout << "=== Tokens ===" << std::endl;
-        for (const auto &token : tokens)
-        {
-            std::cout << token.toString() << std::endl;
-        }
+        // 3. 语法分析
+        vexlang::Parser parser(tokens);
+        std::unique_ptr<vexlang::Program> program = parser.parse();
+
+        std::cout << "Parsing successful!" << std::endl;
+        std::cout << "   Found " << program->functions.size() << " function(s)" << std::endl;
     }
     catch (const vexlang::PreprocessorError &e)
     {
