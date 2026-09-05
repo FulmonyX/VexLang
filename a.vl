@@ -1,0 +1,10 @@
+// 测试注释
+fn main() -> int32 {
+    let x = 42;
+    let y = x + 10;
+    if (x == y) {
+        return true;
+    } else {
+        return false;
+    }
+}
