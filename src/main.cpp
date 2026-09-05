@@ -3,7 +3,6 @@
 #include "../inc/parser.h"
 #include "../inc/utils.h"
 #include <iostream>
-//g++ -std=c++17 src/main.cpp src/preprocessor.cpp src/lexer.cpp src/parser.cpp src/utils.cpp -o vl
 int main(int argc, char *argv[])
 {
     if (argc < 2)

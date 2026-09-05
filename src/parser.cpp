@@ -4,9 +4,6 @@
 
 namespace vexlang
 {
-
-
-
     NumberExpr::NumberExpr(double val) : value(val) {}
 
     VariableExpr::VariableExpr(const std::string &name) : name(name) {}
@@ -139,7 +136,6 @@ namespace vexlang
         }
     }
 
-
     std::string Parser::parseType()
     {
         if (check(TokenType::INT8) || check(TokenType::INT16) ||
@@ -160,7 +156,6 @@ namespace vexlang
         }
         return "";
     }
-
 
     std::unique_ptr<ASTNode> Parser::parseExpression()
     {
