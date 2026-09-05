@@ -1,5 +1,5 @@
-#include "../inc/preprocessor.h"
-#include "../inc/utils.h"
+#include "../include/preprocessor.h"
+#include "../include/utils.h"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
@@ -15,8 +15,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
+    std::string exeDir = Utils::getDir(argv[0]);
+    
     Preprocessor preprocessor;
-    preprocessor.addSystemPath("./lib");
+    preprocessor.addSystemPath(Utils::joinPath(exeDir, "lib"));
     
     std::cout << preprocessor.preprocess(inputFile);
     
