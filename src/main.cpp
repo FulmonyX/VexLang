@@ -1,5 +1,5 @@
-#include "../include/preprocessor.h"
-#include "../include/utils.h"
+#include "../inc/preprocessor.h"
+#include "../inc/utils.h"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
