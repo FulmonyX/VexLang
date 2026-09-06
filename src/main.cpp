@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
         vexlang::Parser parser(tokens);
         std::unique_ptr<vexlang::Program> program = parser.parse();
 
-        std::cout << "✅ Parsing successful!" << std::endl;
+        std::cout << "Parsing successful!" << std::endl;
         std::cout << "   Found " << program->functions.size() << " function(s)" << std::endl;
     }
     catch (const vexlang::PreprocessorError &e)
