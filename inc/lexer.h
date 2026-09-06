@@ -55,6 +55,7 @@ namespace vexlang
         TRUE,
         FALSE,
         NULLPTR,
+        GOTO,
         PLUS,
         MINUS,
         STAR,

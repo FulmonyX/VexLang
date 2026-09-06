@@ -25,6 +25,7 @@ namespace vexlang
             "LET",
             "TRUE", "FALSE",
             "NULLPTR",
+            "GOTO",
             "PLUS", "MINUS", "STAR", "SLASH", "PERCENT",
             "PLUSPLUS", "MINUSMINUS",
             "EQ", "EQEQ", "NEQ",
@@ -45,7 +46,7 @@ namespace vexlang
     bool Token::isKeyword() const
     {
         return (int)type >= (int)TokenType::INT8 &&
-               (int)type <= (int)TokenType::NULLPTR;
+               (int)type <= (int)TokenType::GOTO;
     }
 
     bool Token::isType() const
@@ -113,6 +114,7 @@ namespace vexlang
         keywords["false"] = TokenType::FALSE;
         keywords["nullptr"] = TokenType::NULLPTR;
         keywords["null"] = TokenType::NULLPTR;
+        keywords["goto"] = TokenType::GOTO;
     }
 
     void Lexer::advance()

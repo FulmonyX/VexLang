@@ -9,18 +9,12 @@
 namespace vexlang
 {
 
-    /*
-     * AST 节点基类
-     */
     class ASTNode
     {
     public:
         virtual ~ASTNode() = default;
     };
 
-    /*
-     * 表达式节点
-     */
     class NumberExpr : public ASTNode
     {
     public:
@@ -52,9 +46,7 @@ namespace vexlang
         CallExpr(const std::string &callee, std::vector<std::unique_ptr<ASTNode>> args);
     };
 
-    /*
-     * 语句节点
-     */
+
     class VariableDecl : public ASTNode
     {
     public:
@@ -107,9 +99,21 @@ namespace vexlang
         explicit BlockStmt(std::vector<std::unique_ptr<ASTNode>> statements);
     };
 
-    /*
-     * 顶层节点
-     */
+    class GotoStmt : public ASTNode
+    {
+    public:
+        std::string label;
+        explicit GotoStmt(const std::string &label);
+    };
+
+    class LabelStmt : public ASTNode
+    {
+    public:
+        std::string name;
+        std::unique_ptr<ASTNode> stmt;
+        LabelStmt(const std::string &name, std::unique_ptr<ASTNode> stmt);
+    };
+
     class FunctionDef : public ASTNode
     {
     public:
@@ -130,9 +134,7 @@ namespace vexlang
         explicit Program(std::vector<std::unique_ptr<FunctionDef>> functions);
     };
 
-    /*
-     * Parser 类
-     */
+
     class Parser
     {
     public:
@@ -173,6 +175,8 @@ namespace vexlang
         std::unique_ptr<ASTNode> parseIfStmt();
         std::unique_ptr<ASTNode> parseWhileStmt();
         std::unique_ptr<ASTNode> parseBlock();
+        std::unique_ptr<ASTNode> parseGotoStmt();
+        std::unique_ptr<ASTNode> parseLabelStmt();
 
         std::unique_ptr<FunctionDef> parseFunction();
         std::string parseType();

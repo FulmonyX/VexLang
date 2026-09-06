@@ -4,6 +4,7 @@
 
 namespace vexlang
 {
+
     NumberExpr::NumberExpr(double val) : value(val) {}
 
     VariableExpr::VariableExpr(const std::string &name) : name(name) {}
@@ -34,6 +35,12 @@ namespace vexlang
 
     BlockStmt::BlockStmt(std::vector<std::unique_ptr<ASTNode>> statements)
         : statements(std::move(statements)) {}
+
+    GotoStmt::GotoStmt(const std::string &label)
+        : label(label) {}
+
+    LabelStmt::LabelStmt(const std::string &name, std::unique_ptr<ASTNode> stmt)
+        : name(name), stmt(std::move(stmt)) {}
 
     FunctionDef::FunctionDef(const std::string &name, const std::string &returnType,
                              std::vector<std::string> params, std::vector<std::string> paramTypes,
@@ -129,6 +136,7 @@ namespace vexlang
             case TokenType::WHILE:
             case TokenType::FOR:
             case TokenType::RETURN:
+            case TokenType::GOTO:
                 return;
             default:
                 advance();
@@ -312,7 +320,6 @@ namespace vexlang
         return std::make_unique<CallExpr>(callee, std::move(args));
     }
 
-
     std::unique_ptr<ASTNode> Parser::parseStatement()
     {
         if (check(TokenType::LET))
@@ -331,6 +338,10 @@ namespace vexlang
         {
             return parseReturnStmt();
         }
+        if (check(TokenType::GOTO))
+        {
+            return parseGotoStmt();
+        }
         if (check(TokenType::LBRACE))
         {
             return parseBlock();
@@ -339,6 +350,10 @@ namespace vexlang
         {
             advance();
             return nullptr;
+        }
+        if (check(TokenType::IDENTIFIER) && peekAhead(1).type == TokenType::COLON)
+        {
+            return parseLabelStmt();
         }
         auto expr = parseExpression();
         expect(TokenType::SEMICOLON, "Expected ';'");
@@ -430,6 +445,21 @@ namespace vexlang
         return std::make_unique<BlockStmt>(std::move(statements));
     }
 
+    std::unique_ptr<ASTNode> Parser::parseGotoStmt()
+    {
+        expect(TokenType::GOTO, "Expected 'goto'");
+        Token label = expect(TokenType::IDENTIFIER, "Expected label name");
+        expect(TokenType::SEMICOLON, "Expected ';'");
+        return std::make_unique<GotoStmt>(label.lexeme);
+    }
+
+    std::unique_ptr<ASTNode> Parser::parseLabelStmt()
+    {
+        Token label = advance();
+        expect(TokenType::COLON, "Expected ':'");
+        auto stmt = parseStatement();
+        return std::make_unique<LabelStmt>(label.lexeme, std::move(stmt));
+    }
 
     std::vector<std::string> Parser::parseParamList()
     {
